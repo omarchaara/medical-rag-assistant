@@ -1,0 +1,150 @@
+version: '3.9'
+
+services:
+  # SERVICE 1: Chroma Vector Database
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: medical_rag_chromadb
+    environment:
+      - CHROMA_SERVER_AUTH_CREDENTIALS_FILE=/chroma/auth.toml
+      - CHROMA_SERVER_AUTH_CREDENTIALS_PROVIDER=chromadb.auth.token.TokenAuthServerProvider
+      - CHROMA_SERVER_AUTH_PROVIDER=chromadb.auth.token.TokenAuthServerProvider
+      - ANONYMIZED_TELEMETRY=False
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+      - ./data/chroma_auth:/chroma/auth
+    networks:
+      - medical_rag_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # SERVICE 2: PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: medical_rag_postgres
+    environment:
+      POSTGRES_USER: medical_user
+      POSTGRES_PASSWORD: medical_pass123
+      POSTGRES_DB: medical_rag_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    networks:
+      - medical_rag_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medical_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # SERVICE 3: Ollama LLM Service
+  ollama:
+    image: ollama/ollama:latest
+    container_name: medical_rag_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - medical_rag_network
+    environment:
+      - OLLAMA_KEEP_ALIVE=-1
+    command: serve
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # SERVICE 4: FastAPI Backend
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: medical_rag_api
+    environment:
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - OLLAMA_HOST=ollama
+      - OLLAMA_PORT=11434
+      - DATABASE_URL=postgresql://medical_user:medical_pass123@postgres:5432/medical_rag_db
+      - EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - LLM_MODEL=mistral
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./notebooks:/app/notebooks
+    depends_on:
+      chromadb:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    networks:
+      - medical_rag_network
+    command: python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # SERVICE 5: Streamlit Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: medical_rag_frontend
+    environment:
+      - API_BASE_URL=http://api:8000
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./src/frontend:/app/src/frontend
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - medical_rag_network
+    command: streamlit run src/frontend/app.py --server.address=0.0.0.0 --server.port=8501
+
+  # SERVICE 6: MLflow (Optional - for monitoring)
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.7.1
+    container_name: medical_rag_mlflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow_data:/mlflow
+    networks:
+      - medical_rag_network
+    command: mlflow server --backend-store-uri sqlite:///mlflow/mlflow.db --default-artifact-root /mlflow/artifacts --host 0.0.0.0
+
+volumes:
+  chroma_data:
+  postgres_data:
+  ollama_data:
+  mlflow_data:
+
+networks:
+  medical_rag_network:
+    driver: bridge
