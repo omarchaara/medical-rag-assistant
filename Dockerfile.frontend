@@ -2,26 +2,18 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY requirements.txt .
+COPY frontend-requirements.txt .
 
-# Install Python dependencies (Streamlit-specific)
-RUN pip install --no-cache-dir -r requirements.txt streamlit
+RUN pip install --upgrade pip
 
-# Copy application code
-COPY src/ ./src/
+RUN pip install --no-cache-dir -r frontend-requirements.txt
 
-# Set environment variables
-ENV PYTHONPATH=/app
-ENV PYTHONUNBUFFERED=1
+COPY src/frontend ./src/frontend
 
-# Expose port
 EXPOSE 8501
 
-# Default command
-CMD ["streamlit", "run", "src/frontend/app.py", "--server.address", "0.0.0.0", "--server.port", "8501"]
+CMD ["streamlit", "run", "src/frontend/app.py", "--server.address=0.0.0.0", "--server.port=8501"]
