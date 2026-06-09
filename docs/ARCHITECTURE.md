@@ -5,46 +5,103 @@
 Système de question-réponse médical utilisant RAG (Retrieval-Augmented Generation) pour fournir des réponses basées sur la littérature scientifique et les guidelines cliniques.
 
 ```
-┌─────────────────────────────────────────────────────┐
-│           SOURCES DE DONNÉES MÉDICALES               │
-│  (PDFs, Guidelines, Articles Scientifiques)          │
-└────────────────┬────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────┐
-│         INGESTION & EMBEDDINGS                      │
-│  (Parsing → Chunking → BioBERT Embeddings)          │
-└────────────────┬────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────┐
-│              CHROMA VECTOR DATABASE                  │
-│  (Stockage & Recherche Sémantique)                  │
-└────────────────┬────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────┐
-│            RAG PIPELINE (LangChain)                  │
-│  (Query → Retrieval → Context Building)              │
-└────────────────┬────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────┐
-│              OLLAMA LLM SERVICE                       │
-│  (Mistral 7B - Génération de Réponses)              │
-└────────────────┬────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────┐
-│         FASTAPI BACKEND API                          │
-│  (REST Endpoints, Formatting)                       │
-└────────────────┬────────────────────────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────────────────────────┐
-│           STREAMLIT FRONTEND UI                       │
-│  (Interface Professionnels Médicaux)                │
-└─────────────────────────────────────────────────────┘
++--------------------------------------------------------------+
+¦                    SOURCES DE DONNÉES                       ¦
+¦                                                              ¦
+¦  • Articles PubMed                                           ¦
+¦  • Guidelines OMS                                            ¦
+¦  • Recommandations HAS                                       ¦
+¦  • Fichiers PDF médicaux                                     ¦
+¦  • APIs médicales                                            ¦
+¦  • Kafka (flux futurs)                                       ¦
++--------------------------------------------------------------+
+                        ¦
+                        ?
++--------------------------------------------------------------+
+¦                 INGESTION & NETTOYAGE                       ¦
+¦                                                              ¦
+¦  • FastAPI Upload API                                        ¦
+¦  • Kafka Consumer                                            ¦
+¦  • Extraction PDF                                            ¦
+¦  • Nettoyage texte                                           ¦
+¦  • Découpage (Chunking)                                      ¦
+¦                                                              ¦
+¦ Technologies :                                               ¦
+¦ FastAPI, Kafka, LangChain Document Loaders                  ¦
++--------------------------------------------------------------+
+                        ¦
+                        ?
++--------------------------------------------------------------+
+¦            TRAITEMENT & FEATURE ENGINEERING                 ¦
+¦                                                              ¦
+¦  • Prétraitement NLP                                         ¦
+¦  • Chunk Optimization                                        ¦
+¦  • Génération Embeddings                                     ¦
+¦  • Métadonnées documentaires                                 ¦
+¦                                                              ¦
+¦ Technologies :                                               ¦
+¦ Python, Pandas, PySpark, BioBERT                            ¦
++--------------------------------------------------------------+
+                        ¦
+                        ?
++--------------------------------------------------------------+
+¦                STOCKAGE INTERMÉDIAIRE                       ¦
+¦                                                              ¦
+¦  PostgreSQL                                                  ¦
+¦    • utilisateurs                                            ¦
+¦    • historique requêtes                                     ¦
+¦    • métadonnées documents                                   ¦
+¦                                                              ¦
+¦  ChromaDB / Milvus                                           ¦
+¦    • embeddings vectoriels                                   ¦
+¦                                                              ¦
+¦  Redis                                                       ¦
+¦    • cache réponses                                          ¦
+¦                                                              ¦
+¦  Parquet                                                     ¦
+¦    • datasets préparés                                       ¦
++--------------------------------------------------------------+
+                        ¦
+                        ?
++--------------------------------------------------------------+
+¦            MACHINE LEARNING & INFÉRENCE                     ¦
+¦                                                              ¦
+¦  Pipeline RAG                                                ¦
+¦                                                              ¦
+¦  Question utilisateur                                        ¦
+¦          ?                                                   ¦
+¦  Retrieval ChromaDB                                          ¦
+¦          ?                                                   ¦
+¦  Context Builder                                             ¦
+¦          ?                                                   ¦
+¦  LLM Mistral 7B via Ollama                                   ¦
+¦          ?                                                   ¦
+¦  Réponse avec citations                                      ¦
+¦                                                              ¦
+¦ Technologies :                                               ¦
+¦ LangChain, Ollama, Mistral 7B, Llama 2                      ¦
+¦ MLflow, FastAPI                                              ¦
++--------------------------------------------------------------+
+                        ¦
+                        ?
++--------------------------------------------------------------+
+¦                VISUALISATION & API                          ¦
+¦                                                              ¦
+¦  Streamlit                                                   ¦
+¦     • Chat médical                                           ¦
+¦     • Upload PDF                                             ¦
+¦     • Historique                                              ¦
+¦                                                              ¦
+¦  FastAPI                                                     ¦
+¦     • /ask                                                   ¦
+¦     • /ingest                                                ¦
+¦     • /documents                                             ¦
+¦                                                              ¦
+¦  MLflow UI                                                   ¦
+¦     • monitoring                                             ¦
+¦     • expérimentations                                       ¦
+¦                                                              ¦
++--------------------------------------------------------------+
 ```
 
 ## Stack Technologique
