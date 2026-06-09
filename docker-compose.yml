@@ -91,7 +91,7 @@ services:
         condition: service_started
     networks:
       - medical_rag_network
-    command: python -m src.processing.pipeline
+    command: python -m src.processing.pipeline_simple
     profiles:
       - pipeline
 
