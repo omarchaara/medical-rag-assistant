@@ -39,7 +39,6 @@ ENV/
 .env.*.local
 
 # Data
-data/raw/*
 data/processed/*
 data/models/*
 !data/.gitkeep

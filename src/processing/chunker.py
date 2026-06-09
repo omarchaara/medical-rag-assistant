@@ -16,7 +16,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 logger = logging.getLogger(__name__)
 
 
-class TextChunker:
+class MedicalTextChunker:
     """
     Medical document chunker optimized for RAG systems
     """
@@ -43,7 +43,7 @@ class TextChunker:
         )
 
         logger.info(
-            f"TextChunker initialized "
+            f"MedicalTextChunker initialized "
             f"(size={chunk_size}, overlap={chunk_overlap})"
         )
 
