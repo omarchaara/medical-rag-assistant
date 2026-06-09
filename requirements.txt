@@ -29,6 +29,7 @@ numpy
 # Document Processing
 PyPDF2
 python-docx
+PyMuPDF==1.26.0
 
 # HTTP & Async
 python-dotenv
@@ -50,3 +51,8 @@ mlflow
 pytest
 pytest-asyncio
 pytest-cov
+
+pyarrow==22.0.0
+
+langchain-core
+langchain-text-splitters

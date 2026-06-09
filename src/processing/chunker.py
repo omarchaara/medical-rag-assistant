@@ -1,186 +1,373 @@
+# src/processing/chunker.py
+
+
 """
 Medical Text Chunker for RAG Pipeline
-Chunks medical documents intelligently with medical boundary awareness
+Intelligent chunking for medical documents with metadata enrichment
 """
 
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from typing import List, Dict, Any
-from langchain_core.documents import Document
+import hashlib
 import logging
+from typing import List, Dict, Any
+
+from langchain_core.documents import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 logger = logging.getLogger(__name__)
 
 
-class MedicalTextChunker:
-    """Chunk medical documents with domain-aware splitting"""
-    
-    def __init__(self, chunk_size: int = 512, chunk_overlap: int = 50):
-        """
-        Initialize medical text chunker
-        
-        Args:
-            chunk_size: Maximum size of each chunk in characters
-            chunk_overlap: Number of characters to overlap between chunks
-        """
+class TextChunker:
+    """
+    Medical document chunker optimized for RAG systems
+    """
+
+    def __init__(
+        self,
+        chunk_size: int = 1000,
+        chunk_overlap: int = 200
+    ):
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
-        
-        # Recursive splitter that respects natural boundaries
-        # Order: paragraphs, sentences, words, characters
+
         self.splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap,
             length_function=len,
-            separators=["\n\n", "\n", ". ", " ", ""]
+            separators=[
+                "\n\n",
+                "\n",
+                ". ",
+                " ",
+                ""
+            ]
         )
-        
-        self.logger = logging.getLogger(__name__)
-        self.logger.info(f"MedicalTextChunker initialized: chunk_size={chunk_size}, overlap={chunk_overlap}")
 
-    def chunk_documents(self, documents: List[Document]) -> List[Document]:
-        """
-        Split documents into medical chunks with metadata preservation
-        
-        Args:
-            documents: List of Document objects to chunk
-            
-        Returns:
-            List of chunked Document objects with enhanced metadata
-        """
+        logger.info(
+            f"TextChunker initialized "
+            f"(size={chunk_size}, overlap={chunk_overlap})"
+        )
+
+    def chunk_documents(
+        self,
+        documents: List[Document]
+    ) -> List[Document]:
+
         chunks = []
-        
+
         for doc in documents:
-            # Chunk the document
+
+            source = doc.metadata.get(
+                "source",
+                "unknown"
+            )
+
             doc_chunks = self.splitter.split_documents([doc])
-            
-            # Add chunk-specific metadata
-            source = doc.metadata.get('source', 'unknown')
-            for i, chunk in enumerate(doc_chunks):
+
+            for index, chunk in enumerate(doc_chunks):
+
                 chunk.metadata.update({
-                    "chunk_id": f"{source}_{i}",
-                    "chunk_index": i,
+                    "chunk_id": f"{source}_{index}",
+                    "chunk_index": index,
                     "total_chunks": len(doc_chunks),
-                    "original_length": len(doc.page_content),
                     "chunk_length": len(chunk.page_content),
-                    "chunk_type": self._classify_chunk_type(chunk.page_content)
+                    "original_length": len(doc.page_content),
+                    "chunk_hash": self.generate_chunk_hash(
+                        chunk.page_content
+                    ),
+                    "chunk_type": self.classify_chunk_type(
+                        chunk.page_content
+                    ),
+                    "medical_section": self.detect_medical_section(
+                        chunk.page_content
+                    ),
+                    "quality_score": self.compute_quality_score(
+                        chunk.page_content
+                    ),
+                    "source_document": source
                 })
-                chunks.append(chunk)
-        
-        self.logger.info(f"Chunking completed: {len(documents)} docs → {len(chunks)} chunks")
+
+                if self.is_medical_content(
+                    chunk.page_content
+                ):
+                    chunks.append(chunk)
+
+        logger.info(
+            f"Chunking completed : "
+            f"{len(documents)} docs -> {len(chunks)} chunks"
+        )
+
         return chunks
 
-    def _classify_chunk_type(self, text: str) -> str:
-        """
-        Classify the type of medical chunk based on content
-        
-        Args:
-            text: Chunk text content
-            
-        Returns:
-            String indicating chunk type
-        """
+    def generate_chunk_hash(
+        self,
+        text: str
+    ) -> str:
+
+        return hashlib.sha256(
+            text.encode("utf-8")
+        ).hexdigest()
+
+    def classify_chunk_type(
+        self,
+        text: str
+    ) -> str:
+
         text_lower = text.lower()
-        
-        # Medical keywords for classification
-        classification_keywords = {
-            'symptoms': ['symptom', 'pain', 'fever', 'nausea', 'fatigue', 'headache'],
-            'treatment': ['treatment', 'therapy', 'medication', 'drug', 'surgery', 'management'],
-            'diagnosis': ['diagnosis', 'diagnostic', 'test', 'examination', 'sign'],
-            'prevention': ['prevention', 'preventive', 'vaccination', 'screening'],
-            'prognosis': ['prognosis', 'outcome', 'survival', 'mortality'],
-            'risk_factors': ['risk', 'factor', 'associated', 'predispose']
+
+        categories = {
+            "symptoms": [
+                "symptom",
+                "pain",
+                "fever",
+                "fatigue",
+                "headache",
+                "nausea"
+            ],
+            "diagnosis": [
+                "diagnosis",
+                "diagnostic",
+                "test",
+                "examination"
+            ],
+            "treatment": [
+                "treatment",
+                "therapy",
+                "medication",
+                "drug",
+                "management",
+                "surgery"
+            ],
+            "prevention": [
+                "prevention",
+                "screening",
+                "vaccination"
+            ],
+            "prognosis": [
+                "prognosis",
+                "survival",
+                "outcome"
+            ],
+            "risk_factors": [
+                "risk",
+                "factor",
+                "associated"
+            ]
         }
-        
+
         max_count = 0
-        chunk_type = 'general'
-        
-        for category, keywords in classification_keywords.items():
-            count = sum(1 for keyword in keywords if keyword in text_lower)
+        chunk_type = "general"
+
+        for category, keywords in categories.items():
+
+            count = sum(
+                1
+                for keyword in keywords
+                if keyword in text_lower
+            )
+
             if count > max_count:
                 max_count = count
                 chunk_type = category
-        
+
         return chunk_type
 
-    def analyze_chunks(self, chunks: List[Document]) -> Dict[str, Any]:
-        """
-        Analyze chunk statistics and distributions
-        
-        Args:
-            chunks: List of chunked Document objects
-            
-        Returns:
-            Dictionary with chunk statistics
-        """
-        lengths = [len(chunk.page_content) for chunk in chunks]
-        chunk_types = [chunk.metadata.get('chunk_type', 'unknown') for chunk in chunks]
-        
-        stats = {
-            "total_chunks": len(chunks),
-            "avg_length": sum(lengths) / len(lengths) if lengths else 0,
-            "min_length": min(lengths) if lengths else 0,
-            "max_length": max(lengths) if lengths else 0,
-            "median_length": sorted(lengths)[len(lengths) // 2] if lengths else 0,
-            "chunk_type_distribution": {}
-        }
-        
-        # Count chunk types
-        for chunk_type in chunk_types:
-            stats["chunk_type_distribution"][chunk_type] = stats["chunk_type_distribution"].get(chunk_type, 0) + 1
-        
-        self.logger.info(f"Chunk statistics: {stats}")
-        return stats
+    def detect_medical_section(
+        self,
+        text: str
+    ) -> str:
 
-    def filter_chunks_by_length(self, chunks: List[Document], min_length: int = 50, max_length: int = 2000) -> List[Document]:
-        """
-        Filter chunks by length to ensure quality
-        
-        Args:
-            chunks: List of chunked Document objects
-            min_length: Minimum chunk length
-            max_length: Maximum chunk length
-            
-        Returns:
-            Filtered list of Document objects
-        """
+        text_lower = text.lower()
+
+        sections = {
+            "introduction": [
+                "introduction",
+                "overview",
+                "background"
+            ],
+            "symptoms": [
+                "symptoms",
+                "clinical presentation"
+            ],
+            "diagnosis": [
+                "diagnosis",
+                "diagnostic criteria"
+            ],
+            "treatment": [
+                "treatment",
+                "management",
+                "therapy"
+            ],
+            "prevention": [
+                "prevention",
+                "prophylaxis"
+            ],
+            "references": [
+                "references",
+                "bibliography"
+            ]
+        }
+
+        for section, keywords in sections.items():
+
+            for keyword in keywords:
+
+                if keyword in text_lower:
+                    return section
+
+        return "unknown"
+
+    def compute_quality_score(
+        self,
+        text: str
+    ) -> float:
+
+        score = 1.0
+
+        words = len(text.split())
+
+        if words < 30:
+            score -= 0.3
+
+        if len(text) < 100:
+            score -= 0.2
+
+        if text.count(".") < 2:
+            score -= 0.2
+
+        return round(
+            max(score, 0.0),
+            2
+        )
+
+    def is_medical_content(
+        self,
+        text: str
+    ) -> bool:
+
+        medical_terms = [
+            "patient",
+            "treatment",
+            "therapy",
+            "disease",
+            "diagnosis",
+            "clinical",
+            "medical",
+            "symptom",
+            "drug",
+            "medication"
+        ]
+
+        score = sum(
+            1
+            for term in medical_terms
+            if term in text.lower()
+        )
+
+        return score >= 1
+
+    def filter_chunks_by_length(
+        self,
+        chunks: List[Document],
+        min_length: int = 50,
+        max_length: int = 2000
+    ) -> List[Document]:
+
         filtered = [
-            chunk for chunk in chunks 
+            chunk
+            for chunk in chunks
             if min_length <= len(chunk.page_content) <= max_length
         ]
-        
-        self.logger.info(f"Filtered chunks: {len(chunks)} → {len(filtered)} (length range: {min_length}-{max_length})")
+
+        logger.info(
+            f"Filtered chunks: "
+            f"{len(chunks)} -> {len(filtered)}"
+        )
+
         return filtered
 
-    def merge_short_chunks(self, chunks: List[Document], threshold: int = 100) -> List[Document]:
-        """
-        Merge chunks that are too short with adjacent chunks
-        
-        Args:
-            chunks: List of chunked Document objects
-            threshold: Minimum length threshold for merging
-            
-        Returns:
-            List of Document objects with short chunks merged
-        """
+    def merge_short_chunks(
+        self,
+        chunks: List[Document],
+        threshold: int = 100
+    ) -> List[Document]:
+
         if not chunks:
             return chunks
-            
+
         merged = []
-        current_chunk = chunks[0]
-        
+
+        current = chunks[0]
+
         for chunk in chunks[1:]:
-            if len(current_chunk.page_content) < threshold:
-                # Merge with current chunk
-                current_chunk.page_content += " " + chunk.page_content
-                current_chunk.metadata["merged"] = True
-                current_chunk.metadata["chunk_length"] = len(current_chunk.page_content)
+
+            if len(current.page_content) < threshold:
+
+                current.page_content += (
+                    "\n" + chunk.page_content
+                )
+
+                current.metadata["merged"] = True
+
+                current.metadata["chunk_length"] = len(
+                    current.page_content
+                )
+
             else:
-                # Add current chunk and start new
-                merged.append(current_chunk)
-                current_chunk = chunk
-        
-        # Add the last chunk
-        merged.append(current_chunk)
-        
-        self.logger.info(f"Merged short chunks: {len(chunks)} → {len(merged)}")
+
+                merged.append(current)
+
+                current = chunk
+
+        merged.append(current)
+
+        logger.info(
+            f"Merged chunks : "
+            f"{len(chunks)} -> {len(merged)}"
+        )
+
         return merged
+
+    def analyze_chunks(
+        self,
+        chunks: List[Document]
+    ) -> Dict[str, Any]:
+
+        lengths = [
+            len(chunk.page_content)
+            for chunk in chunks
+        ]
+
+        stats = {
+            "total_chunks": len(chunks),
+            "avg_length": (
+                sum(lengths) / len(lengths)
+                if lengths else 0
+            ),
+            "min_length": (
+                min(lengths)
+                if lengths else 0
+            ),
+            "max_length": (
+                max(lengths)
+                if lengths else 0
+            ),
+            "chunk_type_distribution": {}
+        }
+
+        for chunk in chunks:
+
+            chunk_type = chunk.metadata.get(
+                "chunk_type",
+                "unknown"
+            )
+
+            stats["chunk_type_distribution"][
+                chunk_type
+            ] = (
+                stats["chunk_type_distribution"]
+                .get(chunk_type, 0) + 1
+            )
+
+        logger.info(stats)
+
+        return stats
