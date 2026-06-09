@@ -41,12 +41,6 @@ services:
       - chroma_data:/chroma/chroma
     networks:
       - medical_rag_network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
 
   # SERVICE 3: FastAPI Backend (Simplified dependencies for Day 1)
   api:
@@ -67,7 +61,7 @@ services:
       postgres:
         condition: service_healthy
       chromadb:
-        condition: service_healthy
+        condition: service_started
     networks:
       - medical_rag_network
     command: python -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
@@ -77,7 +71,31 @@ services:
       timeout: 10s
       retries: 3
 
-  # SERVICE 4: Streamlit Frontend
+  # SERVICE 5: RAG Pipeline Runner (Day 2)
+  rag_pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: medical_rag_pipeline
+    environment:
+      - DATABASE_URL=postgresql://medical_user:medical_pass123@postgres:5432/medical_rag_db
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      chromadb:
+        condition: service_started
+    networks:
+      - medical_rag_network
+    command: python -m src.processing.pipeline
+    profiles:
+      - pipeline
+
+  # SERVICE 6: Streamlit Frontend
   frontend:
     build:
       context: .
@@ -96,7 +114,7 @@ services:
       - medical_rag_network
     command: streamlit run src/frontend/app.py --server.address=0.0.0.0 --server.port=8501
 
-  # SERVICES 5-6 (Ollama & MLflow) - ENABLED ON DAYS 4-5
+  # SERVICE 7: Ollama (Day 4)
   # Commented out for Day 1 - will be enabled as implementation progresses
   # ollama:
   #   image: ollama/ollama:latest

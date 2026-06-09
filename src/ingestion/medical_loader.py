@@ -3,11 +3,11 @@ Medical Document Loader for RAG Pipeline
 Loads PDF, HTML, and text medical documents
 """
 
-from langchain.document_loaders import PyPDFLoader, TextLoader
+from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from pathlib import Path
 import logging
 from typing import List
-from langchain.schema import Document
+from langchain_core.documents import Document
 
 logger = logging.getLogger(__name__)
 

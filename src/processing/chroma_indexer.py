@@ -7,7 +7,7 @@ import chromadb
 from chromadb.config import Settings
 from chromadb.utils import embedding_functions
 from typing import List, Dict, Any, Optional
-from langchain.schema import Document
+from langchain_core.documents import Document
 import logging
 import json
 from pathlib import Path

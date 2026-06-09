@@ -6,7 +6,7 @@ Generates domain-specific embeddings using BioBERT or sentence-transformers
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from typing import List, Union
-from langchain.schema import Document
+from langchain_core.documents import Document
 import logging
 
 logger = logging.getLogger(__name__)

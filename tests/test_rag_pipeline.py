@@ -15,7 +15,7 @@ from src.ingestion.medical_loader import MedicalDocumentLoader
 from src.processing.chunker import MedicalTextChunker
 from src.processing.embeddings import MedicalEmbeddingGenerator
 from src.processing.chroma_indexer import ChromaIndexer
-from langchain.schema import Document
+from langchain_core.documents import Document
 
 
 class TestMedicalDocumentLoader:
