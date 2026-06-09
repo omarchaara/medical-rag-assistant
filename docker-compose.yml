@@ -1,5 +1,7 @@
 version: '3.9'
 
+name: medical-rag-assistant
+
 # Day 1 Simplified Docker Compose for Infrastructure Testing
 # This version removes complex dependencies for initial connectivity testing
 # Full services will be enabled as we implement them in Days 2-5
