@@ -67,6 +67,7 @@ docker-compose.override.yml
 
 # MLflow
 mlruns/
+mlflow.db
 
 # Testing
 .pytest_cache/
