@@ -25,6 +25,7 @@ torch
 # Data Processing
 pandas
 numpy
+scikit-learn
 
 # Document Processing
 PyPDF2
