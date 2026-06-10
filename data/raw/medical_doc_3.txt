@@ -1,0 +1,22 @@
+Asthma Treatment Guidelines
+Asthma is a chronic inflammatory disease of the airways characterized by variable and recurring symptoms, reversible airflow obstruction, and bronchospasm.
+
+Symptoms:
+- Wheezing
+- Shortness of breath
+- Chest tightness
+- Coughing
+
+Triggers:
+- Allergens (pollen, dust mites)
+- Exercise
+- Cold air
+- Stress
+- Smoke
+
+Treatment:
+- Inhaled corticosteroids (maintenance)
+- Short-acting beta agonists (rescue)
+- Long-acting beta agonists
+- Leukotriene modifiers
+- Allergy immunotherapy

@@ -40,7 +40,7 @@ class EmbeddingModelComparator:
             self.logger.error(f"Failed to load model {model_name}: {e}")
             raise
         
-    def compare_models(self, chunks: List[Document], test_queries: List[tuple[str, List[str]]]) -> List[Dict[str, Any]]:
+    def compare_models(self, chunks: List[Document], test_queries: List[tuple[str, List[int]]]) -> List[Dict[str, Any]]:
         """
         Comparer plusieurs embedding models sur retrieval quality
         
@@ -65,12 +65,15 @@ class EmbeddingModelComparator:
             
             try:
                 chunk_embeddings = model.encode(chunk_texts, show_progress_bar=False)
+                self.logger.info(f"Generated embeddings shape: {chunk_embeddings.shape}")
                 
                 # Test retrieval quality
                 mrr_scores = []
                 retrieval_times = []
                 
-                for query, relevant_ids in test_queries:
+                self.logger.info(f"Testing with {len(test_queries)} queries")
+                for query_idx, (query, relevant_ids) in enumerate(test_queries):
+                    self.logger.info(f"Query {query_idx}: '{query}', relevant indices: {relevant_ids}")
                     import time
                     start = time.time()
                     
@@ -81,13 +84,17 @@ class EmbeddingModelComparator:
                     end = time.time()
                     retrieval_times.append((end - start) * 1000)
                     
+                    self.logger.info(f"Top 5 indices: {top_k_indices}")
+                    
                     # MRR calculation
                     for i, idx in enumerate(top_k_indices):
-                        if chunks[idx].metadata.get('chunk_id') in relevant_ids:
+                        if idx in relevant_ids:
                             mrr_scores.append(1 / (i + 1))
+                            self.logger.info(f"Found relevant at rank {i+1}, MRR contribution: {1/(i+1)}")
                             break
                     else:
                         mrr_scores.append(0)
+                        self.logger.info("No relevant chunk found in top 5")
                 
                 model_result = {
                     'Model': model_name,
@@ -104,6 +111,8 @@ class EmbeddingModelComparator:
                 
             except Exception as e:
                 self.logger.error(f"Error testing model {model_name}: {e}")
+                import traceback
+                self.logger.error(traceback.format_exc())
                 continue
         
         return results
@@ -148,7 +157,7 @@ class EmbeddingModelComparator:
         return table
 
 
-def create_test_queries_medical(chunks: List[Document]) -> List[tuple[str, List[str]]]:
+def create_test_queries_medical(chunks: List[Document]) -> List[tuple[str, List[int]]]:
     """
     Créer des queries médicales de test
     
@@ -156,29 +165,31 @@ def create_test_queries_medical(chunks: List[Document]) -> List[tuple[str, List[
         chunks: List of chunked Document objects
         
     Returns:
-        List of (query, relevant_chunk_ids) tuples
+        List of (query, relevant_chunk_indices) tuples
     """
-    # Medical-specific test queries
-    medical_queries = [
-        ("symptoms of diabetes", []),
-        ("cardiovascular disease treatment", []),
-        ("diabetes management", []),
-        ("heart attack symptoms", []),
-        ("hypertension prevention", [])
-    ]
+    # Dynamic test queries based on actual chunk content
+    medical_queries = []
     
-    # Assign relevant chunks based on content
-    for i, (query, _) in enumerate(medical_queries):
-        relevant_ids = []
-        query_lower = query.lower()
+    for i, chunk in enumerate(chunks):
+        content_lower = chunk.page_content.lower()
         
-        for chunk in chunks:
-            chunk_lower = chunk.page_content.lower()
-            # Simple matching based on keywords
-            if any(keyword in chunk_lower for keyword in query.split()):
-                relevant_ids.append(chunk.metadata.get('chunk_id', f'chunk_{i}'))
-        
-        medical_queries[i] = (query, relevant_ids)
+        # Generate a query based on chunk content keywords
+        if 'diabetes' in content_lower:
+            medical_queries.append(("diabetes symptoms treatment", [i]))
+        elif 'hypertension' in content_lower or 'blood pressure' in content_lower:
+            medical_queries.append(("hypertension high blood pressure", [i]))
+        elif 'asthma' in content_lower or 'wheezing' in content_lower:
+            medical_queries.append(("asthma wheezing treatment", [i]))
+        elif 'heart' in content_lower or 'cardiovascular' in content_lower:
+            medical_queries.append(("heart disease prevention", [i]))
+        elif 'kidney' in content_lower or 'renal' in content_lower:
+            medical_queries.append(("kidney disease chronic", [i]))
+    
+    # Ensure we have at least some queries
+    if not medical_queries:
+        # Fallback: simple queries for first chunks
+        for i in range(min(3, len(chunks))):
+            medical_queries.append((f"query_{i}", [i]))
     
     return medical_queries
 
@@ -197,8 +208,11 @@ def main():
     chunker = MedicalTextChunker()
     chunks = chunker.chunk_documents(documents)
     
+    print(f"\nLoaded {len(chunks)} chunks")
+    
     # Create test queries
     test_queries = create_test_queries_medical(chunks)
+    print(f"Created {len(test_queries)} test queries")
     
     # Add models to compare
     comparator = EmbeddingModelComparator()
@@ -206,12 +220,23 @@ def main():
     # Note: Using smaller models for faster testing
     # In production, use: "microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract"
     try:
+        print("Adding MiniLM-L6-v2 model...")
         comparator.add_model("MiniLM-L6-v2", "sentence-transformers/all-MiniLM-L6-v2")
-    except:
-        print("Warning: Failed to load MiniLM-L6-v2 (might require download)")
+        print("Model added successfully")
+    except Exception as e:
+        print(f"Warning: Failed to load MiniLM-L6-v2: {e}")
+        return
     
     # Compare models
-    results = comparator.compare_models(chunks, test_queries)
+    try:
+        print("Starting model comparison...")
+        results = comparator.compare_models(chunks, test_queries)
+        print(f"Comparison completed, got {len(results)} results")
+    except Exception as e:
+        print(f"Error during comparison: {e}")
+        import traceback
+        traceback.print_exc()
+        return
     
     if results:
         print("\n" + "=" * 70)

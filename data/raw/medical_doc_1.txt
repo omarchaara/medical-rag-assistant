@@ -1,0 +1,20 @@
+Diabetes Mellitus Type 2
+Diabetes mellitus type 2 is a metabolic disorder characterized by high blood sugar, insulin resistance, and relative insulin deficiency. Common symptoms include increased thirst, frequent urination, unexplained weight loss, and fatigue.
+
+Risk factors:
+- Obesity (BMI > 30)
+- Age > 45 years
+- Family history of diabetes
+- Physical inactivity
+- Certain ethnicities (African American, Hispanic, Native American)
+
+Diagnosis:
+- Fasting blood glucose ≥ 126 mg/dL
+- HbA1c ≥ 6.5%
+- Random blood glucose ≥ 200 mg/dL
+
+Treatment:
+- Metformin as first-line medication
+- Lifestyle modifications (diet, exercise)
+- Monitoring blood glucose levels
+- Regular follow-up with healthcare provider
