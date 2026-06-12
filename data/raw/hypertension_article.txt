@@ -1,0 +1,230 @@
+HYPERTENSION ARTÉRIELLE: GUIDE MÉDICAL COMPLET
+
+==============================================
+
+DÉFINITION
+-----------
+L'hypertension artérielle (HTA) est définie par une pression artérielle systolique persistante ≥ 140 mmHg et/ou diastolique ≥ 90 mmHg lors de mesures prises en consultation médicale, ou ≥ 135/85 mmHg lors de mesures ambulatoires (MAPA) ou automesurées au domicile. C'est un facteur de risque majeur de maladies cardiovasculaires.
+
+CLASSIFICATION
+-------------
+Selon les lignes directrices ESC/ESH 2018:
+
+NORMALE: <120/80 mmHg
+ÉLEVÉE NORMALE: 120-129/80-84 mmHg
+HTA STADE 1: 130-139/85-89 mmHg
+HTA STADE 2: ≥140/90 mmHg
+HTA SÉVÈRE: ≥180/110 mmHg
+HTA RÉSISTANTE: Non contrôlée avec 3 antihypertenseurs ou plus
+
+ÉPIDÉMIOLOGIE
+-------------
+- Prévalence mondiale: ~30% des adultes
+- Plus fréquente avec l'âge: 65% chez les >60 ans
+- Majorité des cas de HTA essentielle (95%)
+- Sous-diagnostic: 50% des hypertendus non traités
+- Contrôle insuffisant: seulement 1/3 bien contrôlés
+
+CAUSES
+------
+HTA ESSENTIELLE (95%)
+- Facteurs génétiques (hérédité)
+- Obésité (IMC > 30 augmente risque de 2-3x)
+- Sédentarité
+- Consommation excessive de sel (>5g/jour)
+- Alcool (>2 verres/jour)
+- Stress chronique
+- Âge avancé
+
+HTA SECONDAIRE (5%)
+- Maladies rénales (néphropathies, sténose rénale)
+- Maladies endocriniennes (hyperaldostéronisme, syndrome de Cushing)
+- Apnée du sommeil
+- Coarctation de l'aorte
+- Médicaments (AINS, corticostéroïdes, décongestionnants)
+- Grossesse (pré-éclampsie)
+
+SYMPTÔMES
+----------
+L'hypertension est souvent asymptomatique, d'où le surnom de "tueur silencieux". Symptômes possibles:
+
+- Céphalées (occipitales, matinales)
+- Vertiges
+- Acouphènes (bourdonnements d'oreilles)
+- Vision floue
+- Palpitations
+- Essoufflement à l'effort
+- Fatigue
+- Douleurs thoraciques
+- Œdèmes (gonflement des chevilles)
+
+COMPLICATIONS
+-------------
+ORGANES CIBLES
+
+CŒUR
+- Hypertrophie ventriculaire gauche
+- Insuffisance cardiaque
+- Angine de poitrine
+- Infarctus du myocarde
+- Arythmies (fibrillation auriculaire)
+
+CERVEAU
+- AVC ischémique (stroke)
+- Hémorragie cérébrale
+- Démence vasculaire
+- Encéphalopathie hypertensive
+
+REINS
+- Néphropathie hypertensive
+- Insuffisance rénale chronique
+- Protéinurie
+- Microalbuminurie
+
+VAISSEAUX
+- Artériopathie périphérique
+- Dissection aortique
+- Anévrisme aortique
+
+YEUX
+- Rétinopathie hypertensive
+- Hémorragies rétiniennes
+- Œdème papillaire
+
+DIAGNOSTIC
+----------
+MESURES DE PA
+- Consultation médicale: moyenne de 2-3 mesures
+- MAPA (monitoring ambulatoire): 24h
+- Automesure au domicile: 7 jours, matin et soir
+- Position assise, repos 5 min, bras au niveau du cœur
+
+EXAMENS COMPLÉMENTAIRES
+- Hémogramme complet
+- Ionogramme sanguin (K+, Na+)
+- Créatininémie, eDFG
+- Glycémie, HbA1c
+- Profil lipidique
+- Bandelette urinaire (protéinurie)
+- Électrocardiogramme (ECG)
+- Radiographie thoracique
+- Échographie cardiaque (si HTA sévère ou complications)
+- Fond d'œil (rétinopathie)
+
+TRAITEMENT
+----------
+
+MODIFICATIONS DU MODE DE VIE
+Perte de poids
+- Réduction de 5-10% du poids si surpoids
+- IMC idéal: 18.5-24.9 kg/m²
+
+Régime alimentaire
+- Régime DASH ou méditerranéen
+- Réduction du sel: <5g/jour (2g de sodium)
+- Augmentation des fruits et légumes
+- Limiter graisses saturées
+- Modération alcool: <2 verres/jour (H), 1 (F)
+
+Exercice physique
+- 150 min/semaine d'aérobie d'intensité modérée
+- Marche rapide, natation, cyclisme
+- Renforcement musculaire 2-3x/semaine
+- Réduction temps sédentaire
+
+Arrêt du tabac
+- Conseil et support
+- Thérapie de remplacement de la nicotine
+- Bénéfices immédiats sur la PA
+
+Gestion du stress
+- Techniques de relaxation
+- Méditation, yoga
+- Amélioration de l'hygiène de sommeil
+
+TRAITEMENT MÉDICAMENTEUX
+
+DIURÉTIQUES THIAZIDIQUES
+- Hydrochlorothiazide 12.5-50mg/jour
+- Indapamide 1.5-2.5mg/jour
+- Premier choix chez les patients âgés
+- Surveillance: K+, uricémie, glycémie
+
+INHIBITEURS CALCIUM (CCB)
+- Amlodipine 5-10mg/jour
+- Nifédipine, Diltiazem
+- Indiqués chez les patients âgés
+- Effets secondaires: œdèmes, constipation
+
+INHIBITEURS DE L'ENZYME DE CONVERSION (IEC)
+- Enalapril, Ramipril, Lisinopril
+- Dose initiale faible, titration progressive
+- Contre-indication: grossesse, sténose bilatérale
+- Surveillance: K+, créatininémie
+
+ANTAGONISTES DES RÉCEPTEURS DE L'ANGIOTENSINE (ARA)
+- Losartan, Valsartan, Irbesartan
+- Similaire aux IEC, mieux tolérés
+- Indication: néphropathie diabétique
+- Moins de toux que les IEC
+
+BÊTA-BLOQUANTS
+- Bisoprolol, Métoprolol
+- Indications: post-IM, insuffisance cardiaque
+- Effets secondaires: bradycardie, fatigue
+- Pas en première intention sauf indications spécifiques
+
+INHIBITEURS DE RÉNINE
+- Aliskiren
+- Usage limité, combinaisons avec IEC/ARA déconseillées
+
+TRAITEMENT COMBINÉ
+- Monothérapie initiale pour HTA légère-moyère
+- Bithérapie pour HTA modérée-sévère
+- Trithérapie pour HTA sévère
+- Combinaisons fixes améliorent l'observance
+
+OBJECTIFS THÉRAPIQUES
+- <140/90 mmHg chez les <80 ans
+- <150/90 mmHg chez les >80 ans
+- <130/80 mmHg chez les diabétiques, néphropathes
+- <140/85 mmHg en MAPA
+
+SURVEILLANCE
+------------
+SUIVI RÉGULIER
+
+Consultations
+- Initiale: 2-4 semaines
+- Titration: mensuelle
+- Stable: 3-6 mois
+- Annuel: bilan complet
+
+Paramètres à surveiller
+- Pression artérielle à chaque consultation
+- Poids, IMC
+- Fonction rénale (créatinine, K+)
+- Glycémie chez diabétiques
+- Lipides
+- Effets secondaires
+
+Automesure
+- Encouragée pour amélioration observance
+- Cahier de mesures
+- Appareils validés, brassard ajusté
+
+PRÉVENTION PRIMAIRE
+-------------------
+Stratégies de prévention:
+
+1. Maintien d'un poids santé
+2. Alimentation pauvre en sel
+3. Activité physique régulière
+4. Limitation alcool
+5. Arrêt tabagique
+6. Gestion du stress
+7. Dépistage régulier (annuel après 40 ans)
+
+CONCLUSION
+----------
+L'hypertension artérielle est une maladie chronique fréquente nécessitant une prise en charge à vie. Une approche combinant modifications du mode de vie et traitement pharmacologique personnalisé permet de réduire significativement le risque de complications cardiovasculaires. L'éducation du patient et l'observance thérapeutique sont essentielles pour un contrôle optimal.

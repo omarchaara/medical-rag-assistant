@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical RAG Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .response {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        .response.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .response h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .response p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .chunk {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 3px solid #667eea;
+        }
+        .chunk-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        .metrics {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+        .error {
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #721c24;
+        }
+        .success {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #155724;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        .status-healthy {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Medical RAG Assistant</h1>
+        <p class="subtitle">Assistant IA médical basé sur RAG (Retrieval-Augmented Generation)</p>
+        
+        <!-- API Health Test -->
+        <div class="section">
+            <h2>🧪 Test API Health</h2>
+            <button onclick="testHealth()">Tester la santé de l'API</button>
+            <div id="healthResponse" class="response"></div>
+        </div>
+        
+        <!-- RAG Query -->
+        <div class="section">
+            <h2>💬 Question Médicale</h2>
+            <p style="color: #666; margin-bottom: 15px;">Entrez votre question médicale en langage naturel:</p>
+            <input type="text" id="queryInput" placeholder="Ex: Quels sont les symptômes du diabète de type 2 ?">
+            <button onclick="sendQuery()">Envoyer la question</button>
+            <div id="queryResponse" class="response"></div>
+        </div>
+        
+        <!-- Metrics -->
+        <div class="section">
+            <h2>📊 Métriques Prometheus</h2>
+            <button onclick="getMetrics()">Voir les métriques</button>
+            <div id="metricsResponse" class="response"></div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="section">
+            <h2>📈 Statistiques Système</h2>
+            <button onclick="getStats()">Voir les statistiques</button>
+            <div id="statsResponse" class="response"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:8000';
+        
+        function showLoading(elementId) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = '<div class="loading">⏳ Chargement...</div>';
+            element.classList.add('show');
+        }
+        
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="error">❌ Erreur: ${message}</div>`;
+            element.classList.add('show');
+        }
+        
+        function showSuccess(elementId, content) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = content;
+            element.classList.add('show');
+        }
+        
+        async function testHealth() {
+            showLoading('healthResponse');
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showSuccess('healthResponse', `
+                        <div class="success">
+                            ✅ API est healthy ! <span class="status status-healthy">ONLINE</span>
+                        </div>
+                        <h3>Réponse:</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `);
+                } else {
+                    showError('healthResponse', `Status ${response.status}`);
+                }
+            } catch (error) {
+                showError('healthResponse', error.message);
+            }
+        }
+        
+        async function sendQuery() {
+            const query = document.getElementById('queryInput').value;
+            if (!query) {
+                alert('Veuillez entrer une question');
+                return;
+            }
+            
+            showLoading('queryResponse');
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: query,
+                        top_k: 5
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let chunksHtml = '';
+                    if (data.chunks && data.chunks.length > 0) {
+                        chunksHtml = data.chunks.map((chunk, index) => `
+                            <div class="chunk">
+                                <div class="chunk-title">Chunk ${index + 1} - Score: ${(chunk.score || 0).toFixed(3)}</div>
+                                <p>${chunk.text || chunk.content || 'Contenu non disponible'}</p>
+                            </div>
+                        `).join('');
+                    }
+                    
+                    let metricsHtml = '';
+                    if (data.metrics) {
+                        metricsHtml = `
+                            <div class="metrics">
+                                <h4>⚡ Performance:</h4>
+                                <p>Temps d'embedding: ${(data.metrics.embedding_time || 0).toFixed(4)}s</p>
+                                <p>Temps de retrieval: ${(data.metrics.retrieval_time || 0).toFixed(4)}s</p>
+                                <p>Temps total: ${(data.metrics.total_time || 0).toFixed(4)}s</p>
+                            </div>
+                        `;
+                    }
+                    
+                    showSuccess('queryResponse', `
+                        <div class="success">✅ Query traitée avec succès !</div>
+                        
+                        <h3>📝 Réponse:</h3>
+                        <p>${data.response || 'Réponse non disponible'}</p>
+                        
+                        ${metricsHtml}
+                        
+                        <h3>📚 Chunks Récupérés (${data.chunks ? data.chunks.length : 0}):</h3>
+                        ${chunksHtml}
+                    `);
+                } else {
+                    showError('queryResponse', `Status ${response.status}`);
+                }
+            } catch (error) {
+                showError('queryResponse', error.message);
+            }
+        }
+        
+        async function getMetrics() {
+            showLoading('metricsResponse');
+            try {
+                const response = await fetch(`${API_BASE_URL}/metrics`);
+                const text = await response.text();
+                
+                if (response.ok) {
+                    showSuccess('metricsResponse', `
+                        <h3>📊 Métriques Prometheus:</h3>
+                        <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto;">${text.substring(0, 2000)}${text.length > 2000 ? '\n... (tronqué)' : ''}</pre>
+                    `);
+                } else {
+                    showError('metricsResponse', `Status ${response.status}`);
+                }
+            } catch (error) {
+                showError('metricsResponse', error.message);
+            }
+        }
+        
+        async function getStats() {
+            showLoading('statsResponse');
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/stats`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showSuccess('statsResponse', `
+                        <h3>📈 Statistiques Système:</h3>
+                        <div class="metrics">
+                            <p>📄 Documents totaux: ${data.total_documents || 0}</p>
+                            <p>📚 Chunks totaux: ${data.total_chunks || 0}</p>
+                            <p>👥 Sessions actives: ${data.active_sessions || 0}</p>
+                            <p>🔄 Requêtes totales: ${data.total_requests || 0}</p>
+                        </div>
+                    `);
+                } else {
+                    showError('statsResponse', `Status ${response.status}`);
+                }
+            } catch (error) {
+                showError('statsResponse', error.message);
+            }
+        }
+    </script>
+</body>
+</html>

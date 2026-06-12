@@ -1,0 +1,311 @@
+MALADIES CARDIOVASCULAIRES: GUIDE COMPREHENSIF
+
+=============================================
+
+INTRODUCTION
+------------
+Les maladies cardiovasculaires (MCV) représentent la première cause de mortalité mondiale, responsables de plus de 17 millions de décès annuels. Elles englobent l'ensemble des pathologies affectant le cœur et les vaisseaux sanguins, incluant la maladie coronarienne, les accidents vasculaires cérébraux (AVC), l'insuffisance cardiaque et les maladies artérielles périphériques.
+
+CLASSIFICATION PRINCIPALE
+-----------------------
+
+MÉDICINE CORONAIRE (ANGINE, INFARCTUS)
+- Rétrécissement des artères coronaires
+- Ischémie myocardique
+- Le plus fréquent des MCV
+
+ACCIDENT VASCULAIRE CÉRÉBRAL (AVC)
+- Ischémique (80%): obstruction artérielle
+- Hémorragique (20%): rupture vasculaire
+- Troisième cause de décès
+
+INSUFFISANCE CARDIAQUE
+- Incapacité du cœur à pomper efficacement
+- Prévalence: 1-2% de la population
+- Augmente avec l'âge
+
+ARRHYTHMIES CARDIAQUES
+- Fibrillation auriculaire
+- Troubles du rythme ventriculaire
+- Risque de mort subite
+
+MALADIES VALVULAIRES
+- Sténose aortique
+- Régurgitation mitrale
+- Cardiopathie rhumatismale
+
+ARTÉRIOPATHIE PÉRIPHÉRIQUE
+- Claudication intermittente
+- Ischémie critique des membres
+- Risque d'amputation
+
+FACTEURS DE RISQUE
+-----------------
+FACTEURS MODIFIABLES
+
+Tabagisme
+- Risque d'AVC x2, d'IDM x2
+- Bénéfices immédiats de l'arrêt
+- Mortalité réduite de 36% après 1 an
+
+Hypertension artérielle
+- Risque x2-4 d'IDM
+- Première cause d'AVC
+- Contrôle: <140/90 mmHg
+
+Dyslipidémie
+- LDL élevé, HDL bas
+- Risque d'athérosclérose
+- Statines réduisent mortalité 20-30%
+
+Diabète sucré
+- Risque x2-3 de MCV
+- Micro et macroangiopathie
+- HbA1c <7% recommandé
+
+Obésité
+- IMC >30: risque x2
+- Adiposité viscérale dangereuse
+- Perte de 5-10% bénéfique
+
+Sédentarité
+- Inactivité: risque x2
+- 150 min/semaine d'activité
+- Réduit mortalité cardiovasculaire 30%
+
+Alimentation
+- Régime occidental néfaste
+- Graisses saturées, sel excessif
+- Régime méditerranéen protecteur
+
+FACTEURS NON MODIFIABLES
+
+Âge
+- Risque double chaque décennie après 55 ans
+- 85% des décès >65 ans
+
+Sexe
+- Hommes: risque plus jeune
+- Femmes: rattrapage après ménopause
+
+Hérédité
+- Antécédents familiaux d'IDM précoce
+- Prédisposition génétique
+
+DIAGNOSTIC
+----------
+EXAMENS DE BASE
+
+Électrocardiogramme (ECG)
+- Trace activité électrique cardiaque
+- Dépiste: arythmies, ischémie, hypertrophie
+- Examen non invasif, rapide
+
+Radiographie thoracique
+- Taille du cœur
+- Congestion pulmonaire
+- Calcifications
+
+Bilan biologique
+- Lipides (LDL, HDL, triglycérides)
+- Glycémie, HbA1c
+- Troponine (syndrome coronarien)
+- BNP (insuffisance cardiaque)
+- Fonction rénale, ionogramme
+
+ÉCHECARDIOGRAPHIE
+- Échographie cardiaque
+- Structure et fonction cardiaque
+- Fraction d'éjection
+- Valvules, péricarde
+
+TEST D'EFFORT
+- Charge physique progressive
+- Dépiste l'ischémie myocardique
+- Capacité fonctionnelle
+
+CORONAROGRAPHIE
+- Injection de produit de contraste
+- Visualisation artères coronaires
+- Gold standard diagnostic
+
+ANGIOGRAPHIE
+- Scanner cardiaque
+- Calcification coronarienne
+- Score Agatston
+
+SPECTROVTE TOMOGRAPHIE
+- AngioCT cardiaque
+- Visualisation non invasive
+
+PRÉVENTION
+----------
+PRÉVENTION PRIMAIRE
+
+Stratégies de réduction des risques:
+
+1. Arrêt du tabagisme
+   - Conseil intensif
+   - Substituts nicotiniques
+   - Thérapies comportementales
+
+2. Alimentation saine
+   - Régime méditerranéen
+   - Réduction sel (<5g/jour)
+   - Augmentation oméga-3
+   - 5 portions fruits/légumes/jour
+
+3. Activité physique
+   - 150 min aérobe/semaine
+   - Renforcement 2x/semaine
+   - Réduction sédentarité
+
+4. Contrôle du poids
+   - IMC 18.5-24.9
+   - Tour de taille: <94cm (H), <80cm (F)
+   - Perte 5-10% si surpoids
+
+5. Gestion du stress
+   - Techniques de relaxation
+   - Hygiène de sommeil (7-9h)
+   - Activité sociale
+
+PRÉVENTION SECONDAIRE
+
+Après événement cardiaque:
+
+1. Aspirine ou antiagrégant
+2. Statine (LDL <1.8 mmol/L)
+3. Bêta-bloquant
+4. IEC ou ARA
+5. Programme de réadaptation cardiaque
+6. Arrêt tabagique obligatoire
+7. Contrôle glycémique (diabétiques)
+
+TRAITEMENT
+----------
+
+MÉDICAMENTS ANTI-ANGINEUX
+- Nitrés (trinitrine, ISRN)
+- Bêta-bloquants
+- Inhibiteurs calciques
+- Ivabradine
+- Ranolazine
+
+THROMBOLYSE (IDM)
+- Streptokinase, tPA
+- Administration précoce (<12h)
+- Réduit mortalité 25%
+
+INTERVENTIONS CORONAIRES
+- Angioplastie avec stent
+- Pontage aorto-coronarien
+- Révascularisation
+
+ARYTHMIES
+- Antiarythmiques
+- Cardioversion électrique
+- Ablation par radiofréquence
+- Pacemaker, défibrillateur
+
+INSUFFISANCE CARDIAQUE
+- IEC/ARA + Bêta-bloquant + Diurétique
+- Antagonistes aldostérone
+- Inhibiteurs SGLT2 (nouveau)
+- CRT (stimulation multisite)
+- ICD (défibrillateur)
+
+VALVULOPATHIES
+- Réparation valvulaire
+- Remplacement valvulaire
+- Valvuloplastie percutanée
+
+CHIRURGIE CARDIAQUE
+- Pontage coronarien (CABG)
+- Remplacement valvulaire
+- Transplantation cardiaque
+- Assistance ventriculaire
+
+SURVEILLANCE
+------------
+SUIVI LONGITRAIN
+
+Examens réguliers
+- Tension artérielle
+- Cholestérol
+- Glycémie
+- Poids
+- ECG annuel (si risque)
+
+Patients coronariens
+- Consultations tous les 6 mois
+- Échographie annuelle
+- Test d'effort si symptômes
+
+Patients insuffisants cardiaques
+- Consultations tous les 3 mois
+- Échographie tous les 6 mois
+- BNP régulier
+
+ÉDUCATION DU PATIENT
+- Reconnaissance symptômes
+- Arrêt tabagique
+- Observance thérapeutique
+- Alimentation saine
+- Exercice régulier
+- Gestion stress
+
+URGENCE CARDIOVASCULAIRE
+--------------------
+INFARCTUS DU MYOCARDE (IDM)
+Symptômes typiques
+- Douleur thoracique intense (>20 min)
+- Radiation: bras gauche, mâchoire
+- Dyspnée, sueurs, nausées
+- Anxiété, sensation de mort imminente
+
+Symptômes atypiques (fréquents chez femmes)
+- Douleur épigastrique
+- Dyspnée isolée
+- Fatigue extrême
+- Nausées/vomissements
+
+Action immédiate
+- Appel SAMU (15 en France, 911 aux USA)
+- Aspirine 300-500 mg à croquer
+- Mise au repos
+- Monitoring ECG
+
+AVC (ACCIDENT VASCULAIRE CÉRÉBRAL)
+Signes d'alerte FAST
+- F (Face): visage asymétrique
+- A (Arm): faiblesse bras
+- S (Speech): trouble de la parole
+- T (Time): temps = urgence
+
+Autres signes
+- Cécité unilatérale
+- Vertiges intenses
+- Dysphagie
+- Céphalée brutale sévère
+
+Action immédiate
+- Appel urgence immédiat
+- Position demi-assise
+- Ne pas manger/boire
+- Transport rapide
+
+ARRÊT CARDIAQUE
+Signes
+- Perte de conscience
+- Absence de respiration
+- Pas de pouls carotidien
+
+Action immédiate
+- RCP: 30 compressions/2 ventilations
+- DAE si disponible
+- Appel urgence
+
+CONCLUSION
+----------
+Les maladies cardiovasculaires sont largement préventables par la modification des facteurs de risque. Le diagnostic précoce et le traitement approprié améliorent significativement le pronostic. La prévention reste la stratégie la plus efficace, nécessitant une approche multidisciplinaire combinant éducation, dépistage et traitement personnalisé.
